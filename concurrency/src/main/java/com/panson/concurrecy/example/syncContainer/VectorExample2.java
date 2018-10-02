@@ -1,5 +1,7 @@
 package com.panson.concurrecy.example.syncContainer;
 
+import com.panson.concurrecy.annotation.NotThreadSafe;
+
 import java.util.Vector;
 
 /**
@@ -7,6 +9,7 @@ import java.util.Vector;
  * Description：
  * Author: Panson
  */
+@NotThreadSafe
 public class VectorExample2 {
 
     private static Vector<Integer> vector = new Vector<>();

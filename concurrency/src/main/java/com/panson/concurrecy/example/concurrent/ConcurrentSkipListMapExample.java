@@ -1,16 +1,11 @@
-package com.panson.concurrecy.example.commonUnsafe;
+package com.panson.concurrecy.example.concurrent;
 
 import com.panson.concurrecy.annotation.NotThreadSafe;
+import com.panson.concurrecy.annotation.ThreadSafe;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.*;
 
 /**
  * Package: com.panson.concurrecy.example.commonUnsafe
@@ -18,8 +13,8 @@ import java.util.concurrent.Semaphore;
  * Author: Panson
  */
 @Slf4j
-@NotThreadSafe
-public class HashMapExample {
+@ThreadSafe
+public class ConcurrentSkipListMapExample {
 
     // 请求总数
     public static int clientTatal = 5000;
@@ -27,7 +22,7 @@ public class HashMapExample {
     // 同时并发执行的线程数
     public static int threadTatal = 200;
 
-    private static Map<Integer, Integer> map = new HashMap<>();
+    private static Map<Integer, Integer> map = new ConcurrentHashMap<>();
 
     public static void main(String[] args) throws InterruptedException {
         ExecutorService executorService = Executors.newCachedThreadPool();
