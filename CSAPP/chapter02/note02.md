@@ -7,30 +7,6 @@
 + 关于整数数据类型的取值范围和表示，Java标准是非常明确的。它采用补码表示，这保证了Java程序的跨平台运行。
 + 无符号数编码与补码都具有唯一性，但反码和原码都不具有唯一性（对0有两种不同的编码方式）
 
-<<<<<<< HEAD
 #### 编码
-=======
-#### 4种编码
 
-![](http://latex.codecogs.com/gif.latex?\\frac{\\partial J}{\\partial \\theta_k^{(j)}}=\\sum_{i:r(i,j)=1}{\\big((\\theta^{(j)})^Tx^{(i)}-y^{(i,j)}\\big)x_k^{(i)}}+\\lambda \\xtheta_k^{(j)})
-
->>>>>>> bb5d18a2c2096d99504127154948bb7dd2a04d96
-
-1.无符号数的编码
-$$
-B2U_w(\vec{x}) a\overset{.}{=}\sum_{i=0}^{w-1}x_i2^i
-$$
-2.补码编码
-$$
-B2T_w(\vec{x}) a\overset{.}{=}-x_{w-1}2^{w-1} + \sum_{i=0}^{w-2}x_i2^{i}
-$$
-3.反码编码：与补码相比只有最高位的权值不一样
-$$
-B2O_w(\vec{x}) a\overset{.}{=}-x_{w-1}(2^{w-1}-1)+\sum_{i=0}^{w-2}x_i2^i
-$$
-4.原码编码：
-$$
-B2S_{w}(\vec{x}) a\overset{.}{=}(-1)^{x_{w-1}}*(\sum_{i=0}^{w-2}x_{i}2^{i})
-$$
-
-
+![](https://github.com/PansonPanson/code-collection/blob/master/image-hosting/csapp/%E7%BC%96%E7%A0%81%E6%96%B9%E5%BC%8F.png?raw=true)
