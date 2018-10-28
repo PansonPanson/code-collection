@@ -9,6 +9,10 @@
 
 #### 4种编码
 
+```
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+```
+
 1.无符号数的编码
 $$
 B2U_w(\vec{x}) a\overset{.}{=}\sum_{i=0}^{w-1}x_i2^i
