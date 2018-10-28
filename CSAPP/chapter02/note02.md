@@ -9,9 +9,6 @@
 
 #### 4种编码
 
-![](http://latex.codecogs.com/gif.latex?\\frac{\\partial J}{\\partial \\theta_k^{(j)}}=\\sum_{i:r(i,j)=1}{\\big((\\theta^{(j)})^Tx^{(i)}-y^{(i,j)}\\big)x_k^{(i)}}+\\lambda \\xtheta_k^{(j)})
-
-
 1.无符号数的编码
 $$
 B2U_w(\vec{x}) a\overset{.}{=}\sum_{i=0}^{w-1}x_i2^i
