@@ -14,4 +14,20 @@
 
 #### 编码之间的转换
 
-1.
+1. 补码转无符号数
+
+![](https://github.com/PansonPanson/code-collection/blob/master/image-hosting/csapp/%E8%A1%A5%E7%A0%81%E8%BD%AC%E6%97%A0%E7%AC%A6%E5%8F%B7%E6%95%B0.png?raw=true)
+
+2. 无符号数转补码
+
+![](https://github.com/PansonPanson/code-collection/blob/master/image-hosting/csapp/%E6%97%A0%E7%AC%A6%E5%8F%B7%E6%95%B0%E8%BD%AC%E8%A1%A5%E7%A0%81.png?raw=true)
+
+#### IEEE浮点表示
+
+IEEE浮点标准表示：
+
+![]()
+
++ 符号：s决定这数是负数（s=1）还是正数(s=0)，而对于数值0的符号位解释作为特殊情况处理。
++ 尾数：M是一个二进制小数，它的范围是1~2 - ε，或者是0~1 - ε。
++ 阶码：E的作用是对浮点数加权，这个权重是2的E此幂（可能是负数）。
