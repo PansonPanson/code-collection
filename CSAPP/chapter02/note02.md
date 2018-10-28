@@ -9,9 +9,7 @@
 
 #### 4种编码
 
-```
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
-```
+undefined<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 
 1.无符号数的编码
 $$
