@@ -7,7 +7,14 @@
 + 关于整数数据类型的取值范围和表示，Java标准是非常明确的。它采用补码表示，这保证了Java程序的跨平台运行。
 + 无符号数编码与补码都具有唯一性，但反码和原码都不具有唯一性（对0有两种不同的编码方式）
 
+<<<<<<< HEAD
 #### 编码
+=======
+#### 4种编码
+
+![](http://latex.codecogs.com/gif.latex?\\frac{\\partial J}{\\partial \\theta_k^{(j)}}=\\sum_{i:r(i,j)=1}{\\big((\\theta^{(j)})^Tx^{(i)}-y^{(i,j)}\\big)x_k^{(i)}}+\\lambda \\xtheta_k^{(j)})
+
+>>>>>>> bb5d18a2c2096d99504127154948bb7dd2a04d96
 
 1.无符号数的编码
 $$
