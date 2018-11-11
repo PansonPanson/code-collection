@@ -1,48 +1,90 @@
-# 操作系统漫游记003之程序的机器级表示part1程序编码
+# 操作系统漫游记003之程序的机器级表示part2程序控制的底层实现
 
-### 1.程序编码
+### 1.条件
 
-假设有一个C程序hello.c,在Linux系统上，翻译成可执行的目标文件hello，分为4个阶段进行。
+除了整数寄存器 ，CPU还维护者一组单个位的条件码（condition code）寄存器，用于描述最近的算数或逻辑操作的属性。可以检测这些寄存器来执行条件分支指令。最常用的条件码有：
 
-![](https://github.com/PansonPanson/code-collection/blob/master/image-hosting/csapp/%E7%BC%96%E8%AF%91%E7%B3%BB%E7%BB%9F.png?raw=true0)
++ CF：进位标志
++ ZF：零标志
++ SF：符号标志
++ OF：溢出标志
 
-+ 预处理阶段。预处理器（cpp）根据以字符#开头的命令，修改原始的c程序。比如hello.c中第1行的`#include <stdio.h>`命令告诉预处理器读取系统头文件stdio.h的内容，并把它直接插入到程序文本中。结果就得到了另一个C程序，通常是以.i作为文件扩展名。
-+ 编译阶段。编译器（ccl）将文本文件hello.i翻译成文本文件hello.s，它包含一个汇编语言程序。
-+ 汇编阶段。汇编器（as）将hello.s翻译成机器语言指令，把这些指令打包成一种叫做“可重定位目标程序”的格式，并将结果保存在目标文件hello.o中。hello.o文件是一个二进制文件。
-+ 链接阶段。hello程序调用了printf函数，该函数存在于一个名为printf.o的单独的预编译好了的目标文件中，而这个文件必须以某种方式合并到hello.o程序中。链接器就负责这种合并，并得到hello文件。hello文件是一个可执行目标文件，可以被加载到内存中，由系统执行。
+条件码通常不会直接读取，常用的使用方法有3种：
 
-命令：产生hello.s
++ 可以根据条件码的某种组合，将一个字节设置为0或1；
 
-> gcc -Og -S hello.c
+    + 这一整类指令称为SET指令
 
-命令：产生hello.o
++ 可以条件跳转到程序的某个其他的部分；
 
-> gcc -Og -c hello.c
+    + `jmp`指令是无条件跳转，可以是间接跳转，即跳转目标是作为指令的一部分编码
 
-命令：产生可执行目标文件hello
+        ```c
+        jmp  *%rax
+        ```
 
-> gcc -Og -o p hello.c
+    + 也可以是间接跳转，即跳转目标是从寄存器或内存位置中读出来的。
 
-反汇编命令：
+        ```c
+        jmp  *(%rax)
+        ```
 
-> objdump -d hello.o
++ 可以有条件地传递数据。
 
-### 2.数据格式
+### 2.循环
 
-Inter用术语“字（word）”表示16位数据类型，32位数为“双字（double words）”，64位数为“四字（quad words）”。
+C语言提供了多种循环结构，即do-while、while 和 for，汇编中没有相对应的指令存在，可以用条件测试和跳转组合实现。
 
-大多数GCC生成的汇编代码指令都有一个字符的后缀，表名操作数的大小。数据传送指令有4个变种：movb(传送字节)、movw(传送字)、movl(传送双字)和movq(传送四字)。后缀“l”用来表示双字是因为32位数被看成是"长字（long words）"。
+#### 2.1do-while
 
-对于数据传送指令mov，x86-64加了一条限制传送指令的两个操作数不能都指向内存位置。将一个值从一个内存位置复制到另一个内存位置需要两条指令——第一条指令将源值加载到寄存器中，第二条将该寄存器值写入目的位置。
+```c
+// C代码
+long fact_do(long n) 
+{
+    long result = 1;
+    do {
+        result *= n;
+        n = n - 1;
+    } while (n > 1);
+    return result;
+}
+```
 
-### 3.访问信息
+```c
+// 等价的goto语句
+long fact_do-goto(long n) 
+{
+    long result = 1;
+ loop:
+    result *= n;
+    n = n - 1;
+    if (n > 1)
+        goto loop;
+    return result;
+}
+```
 
-大多数指令有一个或多个操作数，指示出执行一个操作中要使用的源数据值，以及放置结果的目的地址。x86-64支持多种操作数格式。
+```c
+// 对应的汇编代码
+long fact_do(long n)
+n in %rdi
+fact_do:
+	mov1 $1, %eax			Set result = 1
+.L2:						loop:
+	imulq $rdi, %rax			Compute result *= n
+	subq $1, %rdi				Decrement n
+	cmpq $1, %rdi				Compare n:1
+	jg .L2						If >, goto loop
+	req; ret					Return
+```
 
-![](https://github.com/PansonPanson/code-collection/blob/master/image-hosting/csapp/%E6%93%8D%E4%BD%9C%E6%95%B0%E6%A0%BC%E5%BC%8F.jpg?raw=true)
 
-源数据值可以以常数形式给出，或是从寄存器或内存中读出。结果可以存放到寄存器或者内存中。操作数分为3种：
 
-+ 立即数(immediate)：表示常数值。在ATT格式的汇编代码中，立即数的书写方式是“$”后面跟一个整数。
-+ 寄存器(register)：它表示某个寄存器的内容，16个寄存器的低位1字节、2字节、4字节或8字节中的一个数作为操作数，这些字数分别对应于8位、16位、32位或64位。
-+ 内存引用：根据计算出来的地址（称为有效地址）访问某个内存位置。
+#### 2.2while的两种翻译方法
+
+#### 2.3for循环
+
+### 3.分支switch
+
+跳转表是一个数组，表项i是一个代码段的地址，这个代码段实现当开关索引值等于i时程序应该采取的动作。和使用if-else语句相比，跳转表的优点是执行开关语句的时间与开关情况的数量无关。GCC根据开关情况的数量和开关情况值得稀疏程度来翻译开关语句，当开关情况数量比较多（例如4个以上），并且值的范围跨度比较小时，就会使用跳转表。
+
