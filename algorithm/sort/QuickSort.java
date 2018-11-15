@@ -29,7 +29,7 @@ public class QuickSort {
         int pivot = a[r]; // 初始分区点
         int i = p;
         for (int j = p; j < r; j++) {
-            if (a[i] < pivot) {
+            if (a[j] < pivot) {
                 int temp = a[i];
                 a[i] = a[j];
                 a[j] = temp;
